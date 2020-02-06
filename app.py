@@ -13,10 +13,8 @@ import traceback
 import json
 import functools
 from database import *
-from collections import defaultdict
 from sql_queries import *
 import itertools
-from operator import itemgetter
 app = Flask(__name__)
 JSON_SORT_KEYS = False
 @app.route('/api/v1.0/cost-explorer', methods=['GET'])
