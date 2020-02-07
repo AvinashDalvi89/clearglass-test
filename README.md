@@ -104,6 +104,9 @@ Response body:
 
 https://www.getpostman.com/collections/6a6492a0f0221350d247
 
+## Printing log or exception
+use `print_log=true` in GET call. It will print all exception if any
+
 ## Versions
 
 * V1.0
