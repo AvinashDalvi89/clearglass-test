@@ -19,8 +19,9 @@ def get_cost_explorer():
     clients = request.args.getlist('clients[]')
     projects = request.args.getlist('projects[]')
     cost_types = request.args.getlist('cost_types[]')
+    print_log = request.args.get('print_log')
 
-    obj = CostExplorerController()
+    obj = CostExplorerController(print_log)
     result = obj.get_details(clients, projects,cost_types)
     return make_response(jsonify(result))
 

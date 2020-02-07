@@ -18,7 +18,9 @@ class CostExplorerController(DataBase):
     This main controller of processing data from database and make result.
     """
 
-    def __init__(self):
+    def __init__(self,print_log):
+
+        self.print_log = print_log
         self.connection_details = {
 
         }
@@ -35,7 +37,7 @@ class CostExplorerController(DataBase):
                     self.connection_details[key.strip()] = value.strip()
             f.close()
         except Exception, msg:
-            print "Exception in readMasterConfig", msg, file_name
+            self.print_log_msg("Exception in readMasterConfig", msg)
 
     def get_details(self, clients, projects, cost_types):
         """
@@ -66,22 +68,22 @@ class CostExplorerController(DataBase):
             sql_get_data = sql_get_data.replace('{clientCondition}', clients_where_condition)
             clients_result = self.execute_statement(sql_get_data, parameters=())
             project_cost, client_cost = self.get_project_cost_details(project_where_condition,clients_where_condition,cost_types_where_condition)
-            parent_json = []
+            client_json = []
             i = 0
             for client in clients_result:
-                parent_json.append({
+                client_json.append({
                     'id': client.get('ID'),
                     'name': client.get('client'),
                     'amount': client_cost.get(str(client.get('ID')))['amount']
                 })
-                index = len(parent_json) - 1
+                index = len(client_json) - 1
                 for project in client.get('projectID').split(","):
-                    parent_json[index]['breakdown'] = project_cost.get(str(project))
+                    client_json[index]['breakdown'] = project_cost.get(str(project))
 
-            return parent_json
+            return client_json
         except Exception as e:
             exe_stack_trace = traceback.format_exc()
-            print "Error while fetching client and project information---", exe_stack_trace
+            self.print_log_msg("Error while fetching client and project information---", exe_stack_trace)
 
     def get_project_cost_details(self,project_where_condition,clients_where_condition,cost_types_where_condition):
 
@@ -137,7 +139,7 @@ class CostExplorerController(DataBase):
 
         except Exception as e:
             exe_stack_trace = traceback.format_exc()
-            print "Error while fetching cost information by project and types---", exe_stack_trace
+            self.print_log_msg("Error while fetching cost information by project and types---", exe_stack_trace)
 
     def get_tree_from_flat(self,project_cost):
 
