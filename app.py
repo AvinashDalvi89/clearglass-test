@@ -7,12 +7,20 @@
     Created by Avinash on 02/02/2020
 """
 
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, render_template
 import traceback
 from cost_explorer_controller import *
 
 
 app = Flask(__name__)
+
+def index(path=None):
+    return render_template('/index.html', path=path)
+
+path = '/'
+app.add_url_rule(path, 'index', index)
+
+
 @app.route('/api/v1.0/cost-explorer', methods=['GET'])
 def get_cost_explorer():
 
